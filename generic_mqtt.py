@@ -1,5 +1,5 @@
 from paho.mqtt.client import Client, MQTTMessage
-from logger import LoggerSingleton
+from .logger import LoggerSingleton
 
 class GenericMQTT:
 
