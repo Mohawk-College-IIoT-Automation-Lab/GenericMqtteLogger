@@ -16,7 +16,7 @@ class LoggerSingleton:
             cls._instance.logger.addHandler(file_handler)
         return cls._instance
     
-class Logger():
+class Logger:
     def __init__(self, log_name:str="log"):
         self.log_name = log_name
         self.logger = logging.getLogger(self.log_name)

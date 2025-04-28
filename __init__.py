@@ -1,4 +1,5 @@
-from .generic_mqtt import GenericMQTT, LoggerSingleton, Logger
+from .generic_mqtt import GenericMQTT
+from .logger import LoggerSingleton, Logger
 
 __all__ = ["GenericMQTT", "LoggerSingleton", "Logger"]
 
