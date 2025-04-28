@@ -2,7 +2,7 @@ import logging
 
 class LoggerSingleton:
     _instance = None
-    _logger_name = "mqtt_logger"
+    _logger_name = "log"
 
     def __new__(cls):
         if cls._instance is None:

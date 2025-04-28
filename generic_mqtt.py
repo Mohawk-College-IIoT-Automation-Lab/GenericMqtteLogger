@@ -1,11 +1,14 @@
 from paho.mqtt.client import Client, MQTTMessage
-from .logger import LoggerSingleton
+from .logger import LoggerSingleton, Logger
 
 class GenericMQTT:
 
-    def __init__(self, host_name:str="localhost", host_port:int = 1883):
+    def __init__(self, host_name:str="localhost", host_port:int = 1883, logger:Logger=None):
         
-        self.logger = LoggerSingleton().logger
+        if logger is not None:
+            self.logger = logger
+        else:
+            self.logger = LoggerSingleton().logger
         self.logger.debug("Creating GenericMQTT object")
 
         self._connected = False
