@@ -15,5 +15,15 @@ class LoggerSingleton:
             file_handler.setFormatter(formatter)
             cls._instance.logger.addHandler(file_handler)
         return cls._instance
-
+    
+class Logger():
+    def __init__(self, log_name:str="log"):
+        self.log_name = log_name
+        self.logger = logging.getLogger(self.log_name)
+        self.logger.setLevel(logging.DEBUG)
+        file_handler = logging.FileHandler(f"{self.log_name}.log")
+        file_handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
