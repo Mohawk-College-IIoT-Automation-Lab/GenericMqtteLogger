@@ -6,7 +6,7 @@ class GenericMQTT:
     def __init__(self, host_name:str="localhost", host_port:int = 1883, logger:Logger=None):
         
         if logger is not None:
-            self.logger = logger
+            self.logger = logger.logger
         else:
             self.logger = LoggerSingleton().logger
         self.logger.debug("Creating GenericMQTT object")
