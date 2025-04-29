@@ -43,7 +43,7 @@ class GenericMQTT:
         self.logger.info(f"[MQTT] unhandled data received from topic: {message.topic} -> {message.payload.decode()}")
 
     def mqtt_connect(self):
-        self.info(f"[MQTT] Attempting connection to host: {self._host_name} on port: {self._host_port}")
+        self.logger.info(f"[MQTT] Attempting connection to host: {self._host_name} on port: {self._host_port}")
         
         error = self.mqtt_client.connect(self._host_name, self._host_port)
         if error:
