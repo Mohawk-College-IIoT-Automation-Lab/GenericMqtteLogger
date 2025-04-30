@@ -120,7 +120,7 @@ def initialize_logging(
     process_name,
     broker="localhost",
     port=1883,
-    log_level=logging.INFO,
+    log_level=logging.DEBUG,
     system_name="global",
 ):
     """
