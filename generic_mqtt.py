@@ -6,7 +6,7 @@ class GenericMQTT:
 
     def __init__(self, log_name:str="Generic MQTT", host_name:str="localhost", host_port:int = 1883):
         
-        initialize_logging(log_name, host_name, host_port)
+        initialize_logging(process_name=log_name, broker=host_name, port=host_port)
 
         self._connected = False
         self._host_name = host_name
