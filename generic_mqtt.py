@@ -47,7 +47,7 @@ class GenericMQTT:
             logging.error(f"[MQTT] Error connecting to host: {self._host_name}:{self._host_port}, error code: {error}")
             
     def mqtt_disconnect(self):
-        logging.info(f"Disconnecting from {self._host_name}:{self._host_port}")
+        logging.info(f"[MQTT] Disconnecting from {self._host_name}:{self._host_port}")
         self.mqtt_client.disconnect()
 
     @property
