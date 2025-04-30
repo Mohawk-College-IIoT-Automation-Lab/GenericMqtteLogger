@@ -144,23 +144,23 @@ def initialize_logging(
     """
     log_file = f"{process_name}.log"
     logger = logging.getLogger()
+    if not logger.handlers:
+        mqtt_handler = MQTTHandler(
+            process_name=process_name, broker=broker, port=port, system_name=system_name
+        )
+        formatter = CustomFormatter("%(asctime)s %(message)s")
+
+        mqtt_handler.setFormatter(formatter)
+        logger.addHandler(mqtt_handler)
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        logger.addHandler(stream_handler)
+
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
+        # Give the logger sometime to set up
+        time.sleep(SETUP_DELAY)
     logger.setLevel(log_level)
-
-    mqtt_handler = MQTTHandler(
-        process_name=process_name, broker=broker, port=port, system_name=system_name
-    )
-    formatter = CustomFormatter("%(asctime)s %(message)s")
-
-    mqtt_handler.setFormatter(formatter)
-    logger.addHandler(mqtt_handler)
-
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
-
-    file_handler = logging.FileHandler(log_file)
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-    # Give the logger sometime to set up
-    time.sleep(SETUP_DELAY)
