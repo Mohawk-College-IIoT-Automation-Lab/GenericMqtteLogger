@@ -50,6 +50,9 @@ class GenericMQTT:
         logging.info(f"[MQTT] Disconnecting from {self._host_name}:{self._host_port}")
         self.mqtt_client.disconnect()
 
+    def publish(self, topic:str, message):
+        self.mqtt_client.publish(topic=topic, payload=message)
+
     @property
     def connected(self):
         return self._connected
