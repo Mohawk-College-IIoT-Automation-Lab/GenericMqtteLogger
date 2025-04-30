@@ -35,7 +35,7 @@ HEARTBEAT_PERIOD = 10
 
 
 class MQTTHandler(logging.Handler):
-    def __init__(self, process_name, broker, port, system_name="global"):
+    def __init__(self, process_name:str, broker:str, port:int, system_name:str="global"):
         super().__init__()
         self.broker = broker
         self.port = port
@@ -52,7 +52,7 @@ class MQTTHandler(logging.Handler):
         def connect():
             while True:
                 try:
-                    self.client.connect(self.broker, self.port)
+                    self.client.connect(host=self.broker, port=self.port)
                     self.client.loop_start()
                     break
                 except Exception as e:
