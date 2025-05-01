@@ -10,16 +10,16 @@ class GenericMQTT:
 
         self._host_name = host_name
         self._host_port = host_port
-        self.mqtt_client = Client(protocol=MQTTv5, client_id=client_name)
+        self.mqtt_client = Client(client_id=client_name, protocol=MQTTv5)
 
         self.mqtt_client.on_message = self._on_message
         self.mqtt_client.on_connect = self._on_connect
         self.mqtt_client.on_disconnect = self._on_disconnect
 
-    def _on_connect(self, client, userdata, flags, rc):
+    def _on_connect(self, client, userdata, flags, rc, props=None):
         logging.info(f"[MQTT][{client._client_id}] Connected")
 
-    def _on_disconnect(self, client, userdata, rc):
+    def _on_disconnect(self, client, userdata, rc, props=None):
         logging.info(f"[MQTT][{client._client_id}] Disconnected")
         if rc != 0:
             logging.info(f"[MQTT][{client._client_id}] Trying reconnect")
