@@ -14,7 +14,7 @@ class GenericMQTT:
 
         self.mqtt_client.on_message = self._mqtt_default_callback
         self.mqtt_client.on_connect = self._mqtt_connect
-        self.mqtt_client.on_disconnect = self._mqtt_connect
+        self.mqtt_client.on_disconnect = self._mqtt_disconnect
         self.mqtt_client.on_connect_fail = self._mqtt_failed
 
     def _mqtt_connect(self, client:Client, userdata, flags, reason_code):
