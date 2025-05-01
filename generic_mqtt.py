@@ -15,26 +15,21 @@ class GenericMQTT:
         self.mqtt_client.on_message = self._mqtt_default_callback
         self.mqtt_client.on_connect = self._mqtt_connect
         self.mqtt_client.on_disconnect = self._mqtt_disconnect
-        self.mqtt_client.on_connect_fail = self._mqtt_failed
 
-    def _mqtt_connect(self, client:Client, userdata, flags, reason_code):
-        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Connected")
+    def _mqtt_connect(client:Client, userdata, flags, reason_code):
+        logging.info(f"[MQTT][{client._client_id}] Connected")
 
-    def _mqtt_disconnect(self, client:Client, userdata, reason_code):
-        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Disconnected")
+    def _mqtt_disconnect(client:Client, userdata, reason_code):
+        logging.info(f"[MQTT][{client._client_id}] Disconnected")
         if reason_code != 0:
-            logging.info(f"[MQTT][{self.mqtt_client._client_id}] Trying reconnect")
+            logging.info(f"[MQTT][{client._client_id}] Trying reconnect")
             try:
-                self.mqtt_client.reconnect()
+                client.reconnect()
             except Exception as e:
-                logging.error(f"[MQTT][{self.mqtt_client._client_id}] Failed to reconnect")
+                logging.error(f"[MQTT][{client._client_id}] Failed to reconnect")
         
-    def _mqtt_failed(self):
-        self.mqtt_client.loop_stop()
-        logging.error("[MQTT][{self.mqtt_client._client_id}] Failed to connect")
-
-    def _mqtt_default_callback(self, client:Client, userdata, message:MQTTMessage):
-        logging.info(f"[MQTT][{self.mqtt_client._client_id}] unhandled data received from topic: {message.topic} -> {message.payload.decode()}")
+    def _mqtt_default_callback(client:Client, userdata, message:MQTTMessage):
+        logging.info(f"[MQTT][{client._client_id}] unhandled data received from topic: {message.topic} -> {message.payload.decode()}")
 
     def mqtt_connect(self):
         logging.info(f"[MQTT][{self.mqtt_client._client_id}] Attempting connection to host: {self._host_name} on port: {self._host_port}")
