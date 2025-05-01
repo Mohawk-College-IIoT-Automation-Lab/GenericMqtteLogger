@@ -4,7 +4,7 @@ import logging
 
 class GenericMQTT:
 
-    def __init__(self, log_name:str="Generic MQTT", host_name:str="localhost", host_port:int = 1883):
+    def __init__(self, client_name:str="GenericMqtt", log_name:str="Generic MQTT", host_name:str="localhost", host_port:int = 1883):
         
         initialize_logging(process_name=log_name, broker=host_name, port=host_port)
 
