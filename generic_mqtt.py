@@ -17,7 +17,7 @@ class GenericMQTT:
         self.mqtt_client.on_disconnect = self._mqtt_connect
         self.mqtt_client.on_connect_fail = self._mqtt_failed
 
-    def _mqtt_connect(self, client:Client, userdata, reason_code):
+    def _mqtt_connect(self, client:Client, userdata, flags, reason_code):
         logging.info(f"[MQTT][{self.mqtt_client._client_id}] Connected")
 
     def _mqtt_disconnect(self, client:Client, userdata, reason_code):
