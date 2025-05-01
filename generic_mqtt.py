@@ -18,16 +18,9 @@ class GenericMQTT:
         self.mqtt_client.on_disconnect = self._mqtt_connect_disconnect
         self.mqtt_client.on_connect_fail = self._mqtt_failed
 
-    def _mqtt_connect_disconnect(self, client:Client, userdata=None, flags=None, reason_code=None):
+    def _mqtt_connect_disconnect(self, client:Client, userdata, flags, reason_code):
         # Get connection status
         self._connected = self.mqtt_client.is_connected()
-        
-        # Loop start/stop
-        if self._connected:
-            self.mqtt_client.loop_start()
-        else:
-            self.mqtt_client.loop_stop()
-
         # Loggign and emit status
         logging.info(f"[MQTT][{self.mqtt_client._client_id}] Connection status: {self.connected}")
         
@@ -45,6 +38,7 @@ class GenericMQTT:
         error = self.mqtt_client.connect(self._host_name, self._host_port, clean_start=True)
         if error:
             logging.error(f"[MQTT][{self.mqtt_client._client_id}] Error connecting to host: {self._host_name}:{self._host_port}, error code: {error}")
+        self.mqtt_client.loop_forever()
             
     def mqtt_disconnect(self):
         logging.info(f"[MQTT][{self.mqtt_client._client_id}] Disconnecting from {self._host_name}:{self._host_port}")
