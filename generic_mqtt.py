@@ -8,24 +8,28 @@ class GenericMQTT:
         
         initialize_logging(process_name=log_name, broker=host_name, port=host_port)
 
-        self._connected = False
         self._host_name = host_name
         self._host_port = host_port
         self.mqtt_client = Client(protocol=MQTTv5, client_id=client_name)
 
         self.mqtt_client.on_message = self._mqtt_default_callback
-        self.mqtt_client.on_connect = self._mqtt_connect_disconnect
-        self.mqtt_client.on_disconnect = self._mqtt_connect_disconnect
+        self.mqtt_client.on_connect = self._mqtt_connect
+        self.mqtt_client.on_disconnect = self._mqtt_connect
         self.mqtt_client.on_connect_fail = self._mqtt_failed
 
-    def _mqtt_connect_disconnect(self, client:Client, userdata, flags, reason_code):
-        # Get connection status
-        self._connected = self.mqtt_client.is_connected()
-        # Loggign and emit status
-        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Connection status: {self.connected}")
+    def _mqtt_connect(self, client:Client, userdata, reason_code):
+        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Connected")
+
+    def _mqtt_disconnect(self, client:Client, userdata, reason_code):
+        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Disconnected")
+        if reason_code != 0:
+            logging.info(f"[MQTT][{self.mqtt_client._client_id}] Trying reconnect")
+            try:
+                self.mqtt_client.reconnect()
+            except Exception as e:
+                logging.error(f"[MQTT][{self.mqtt_client._client_id}] Failed to reconnect")
         
     def _mqtt_failed(self):
-        self._connected = self.mqtt_client.is_connected()
         self.mqtt_client.loop_stop()
         logging.error("[MQTT][{self.mqtt_client._client_id}] Failed to connect")
 
@@ -49,7 +53,7 @@ class GenericMQTT:
 
     @property
     def connected(self):
-        return self._connected
+        return self.mqtt_client.is_connected()
 
 if __name__ == "__main__":
     genmqtt = GenericMQTT()
