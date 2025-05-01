@@ -11,7 +11,7 @@ class GenericMQTT:
         self._connected = False
         self._host_name = host_name
         self._host_port = host_port
-        self.mqtt_client = Client(protocol=MQTTv5)
+        self.mqtt_client = Client(protocol=MQTTv5, client_id=client_name)
 
         self.mqtt_client.on_message = self._mqtt_default_callback
         self.mqtt_client.on_connect = self._mqtt_connect_disconnect
@@ -29,25 +29,25 @@ class GenericMQTT:
             self.mqtt_client.loop_stop()
 
         # Loggign and emit status
-        logging.info(f"[MQTT] Connection status: {self.connected}")
+        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Connection status: {self.connected}")
         
     def _mqtt_failed(self):
         self._connected = self.mqtt_client.is_connected()
         self.mqtt_client.loop_stop()
-        logging.error("[MQTT] Failed to connect")
+        logging.error("[MQTT][{self.mqtt_client._client_id}] Failed to connect")
 
     def _mqtt_default_callback(self, client:Client, userdata, message:MQTTMessage):
-        logging.info(f"[MQTT] unhandled data received from topic: {message.topic} -> {message.payload.decode()}")
+        logging.info(f"[MQTT][{self.mqtt_client._client_id}] unhandled data received from topic: {message.topic} -> {message.payload.decode()}")
 
     def mqtt_connect(self):
-        logging.info(f"[MQTT] Attempting connection to host: {self._host_name} on port: {self._host_port}")
+        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Attempting connection to host: {self._host_name} on port: {self._host_port}")
         
         error = self.mqtt_client.connect(self._host_name, self._host_port, clean_start=True)
         if error:
-            logging.error(f"[MQTT] Error connecting to host: {self._host_name}:{self._host_port}, error code: {error}")
+            logging.error(f"[MQTT][{self.mqtt_client._client_id}] Error connecting to host: {self._host_name}:{self._host_port}, error code: {error}")
             
     def mqtt_disconnect(self):
-        logging.info(f"[MQTT] Disconnecting from {self._host_name}:{self._host_port}")
+        logging.info(f"[MQTT][{self.mqtt_client._client_id}] Disconnecting from {self._host_name}:{self._host_port}")
         self.mqtt_client.disconnect()
 
     def publish(self, topic:str, message):
@@ -56,28 +56,6 @@ class GenericMQTT:
     @property
     def connected(self):
         return self._connected
-
-    @property
-    def host_name(self):
-        return self._host_name
-
-    @host_name.setter
-    def host_name(self, value: str):
-        if self.connected:
-            logging.warning("Cannot change host name while connected")
-            return
-        self._host_name = value
-
-    @property
-    def host_port(self):
-        return self._host_port
-
-    @host_port.setter
-    def host_port(self, value: int):
-        if self.connected:
-            logging.warning("Cannot change host port while connected")
-            return
-        self._host_port = value
 
 if __name__ == "__main__":
     genmqtt = GenericMQTT()
