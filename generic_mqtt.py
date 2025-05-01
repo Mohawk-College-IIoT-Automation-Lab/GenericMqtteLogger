@@ -12,24 +12,24 @@ class GenericMQTT:
         self._host_port = host_port
         self.mqtt_client = Client(protocol=MQTTv5, client_id=client_name)
 
-        self.mqtt_client.on_message = self._mqtt_default_callback
-        self.mqtt_client.on_connect = self._mqtt_connect
-        self.mqtt_client.on_disconnect = self._mqtt_disconnect
+        self.mqtt_client.on_message = self._on_message
+        self.mqtt_client.on_connect = self._on_connect
+        self.mqtt_client.on_disconnect = self._on_disconnect
 
-    def _mqtt_connect(client:Client, userdata, flags, reason_code):
+    def _on_connect(self, client, userdata, flags, rc):
         logging.info(f"[MQTT][{client._client_id}] Connected")
 
-    def _mqtt_disconnect(client:Client, userdata, reason_code):
+    def _on_disconnect(self, client, userdata, rc):
         logging.info(f"[MQTT][{client._client_id}] Disconnected")
-        if reason_code != 0:
+        if rc != 0:
             logging.info(f"[MQTT][{client._client_id}] Trying reconnect")
             try:
                 client.reconnect()
             except Exception as e:
                 logging.error(f"[MQTT][{client._client_id}] Failed to reconnect")
         
-    def _mqtt_default_callback(client:Client, userdata, message:MQTTMessage):
-        logging.info(f"[MQTT][{client._client_id}] unhandled data received from topic: {message.topic} -> {message.payload.decode()}")
+    def _on_message(self, client, userdata, msg):
+        logging.info(f"[MQTT][{client._client_id}] unhandled data received from topic: {msg.topic} -> {msg.payload.decode()}")
 
     def mqtt_connect(self):
         logging.info(f"[MQTT][{self.mqtt_client._client_id}] Attempting connection to host: {self._host_name} on port: {self._host_port}")
