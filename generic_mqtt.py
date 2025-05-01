@@ -42,7 +42,7 @@ class GenericMQTT:
     def mqtt_connect(self):
         logging.info(f"[MQTT] Attempting connection to host: {self._host_name} on port: {self._host_port}")
         
-        error = self.mqtt_client.connect(self._host_name, self._host_port)
+        error = self.mqtt_client.connect(self._host_name, self._host_port, clean_start=True)
         if error:
             logging.error(f"[MQTT] Error connecting to host: {self._host_name}:{self._host_port}, error code: {error}")
             
