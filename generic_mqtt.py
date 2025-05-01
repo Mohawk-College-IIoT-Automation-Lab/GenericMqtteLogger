@@ -1,4 +1,4 @@
-from paho.mqtt.client import Client, MQTTMessage
+from paho.mqtt.client import Client, MQTTMessage, MQTTv5
 from .davids_logger import initialize_logging
 import logging
 
@@ -11,7 +11,7 @@ class GenericMQTT:
         self._connected = False
         self._host_name = host_name
         self._host_port = host_port
-        self.mqtt_client = Client()
+        self.mqtt_client = Client(protocol=MQTTv5)
 
         self.mqtt_client.on_message = self._mqtt_default_callback
         self.mqtt_client.on_connect = self._mqtt_connect_disconnect
